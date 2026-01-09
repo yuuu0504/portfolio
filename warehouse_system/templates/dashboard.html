@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>儀表板 - 物流倉儲管理系統</title>
+    <!--Bootstrap 官方提供(包含主色調藍色、圓角設計、字體、柵格排版)-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+ <!--背景-淺灰白Light Color-->
+<body class="bg-light">
+    
+     <!--針對畫面右上角設計-->
+
+     <!--最上方黑條設計(navbar=Bootstrap導航列元件自動排列、navbar-dark字變白色、bg背景色、shadow-sm陰影)-->
+    <nav class="navbar navbar-dark bg-dark shadow-sm">
+
+        <!--螢幕寬度填滿-->
+        <div class="container-fluid">
+
+            <!-- navbar-brand=Bootstrap專門給Logo用的樣式 -->
+            <a class="navbar-brand" href="#">
+
+                 <!--fas fa-boxes = 圖案、me = 間距-->
+                <i class="fas fa-boxes me-2"></i>物流倉儲管理系統
+            </a>
+
+            <!-- 更改屬性、水平排列、垂直排列、靠右對齊 -->
+            <div class="d-flex flex-row align-items-center ms-auto">
+
+                <a class="nav-link text-white me-3" href="warehouse.html">
+                    <i class="fas fa-warehouse me-1"></i>倉庫
+                </a>
+                <a class="nav-link text-white me-3" href="supplier.html">
+                    <i class="fas fa-truck me-1"></i>供應商
+                </a>
+                <a class="nav-link active text-warning me-3" href="client.html">
+                    <i class="fas fa-users me-1"></i>客戶
+                </a>
+                <span class="text-secondary mx-2">|</span>
+                <a class="nav-link text-warning me-3" href="inboundorder.html">
+                    <i class="fas fa-file-import me-1"></i>進貨單
+                </a>
+                <a class="nav-link text-success me-3" href="salesorder.html">
+                    <i class="fas fa-file-invoice-dollar me-1"></i>訂單
+                </a>
+
+                <span class="text-secondary mx-2">|</span>
+
+                <span class="text-white ms-2 me-3">
+                    <i class="fas fa-user-circle me-1"></i> Admin
+                </span>
+                <a href="login.html" class="btn btn-outline-light btn-sm">登出</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!--營運概況總覽設計-->
+    <div class="container mt-4">
+
+        <!-- 參考30行 -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-chart-line me-2"></i>營運總覽</h2>
+        </div>
+
+        <!-- 79行:這是一列橫排 與右邊間距為3 與下方間距為4-->
+        <!-- 80行:Bootstrap自動切成12份 佔其中3/12 -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+
+                <!-- 改卡片顏色為primary(藍色) h:填滿 sm:陰影 -->
+                <div class="card text-white bg-primary h-100 shadow-sm">
+                    <div class="card-body">
+
+                        <!-- justify-content-between；數字靠左 圖案靠右 中間留白 -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">總庫存數量</h6>
+                                <h2 class="display-6 fw-bold">1,250</h2>
+                            </div>
+                            <i class="fas fa-cubes fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-dark bg-warning h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">待處理訂單</h6>
+                                <h2 class="display-6 fw-bold">4</h2>
+                            </div>
+                            <i class="fas fa-clipboard-list fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-white bg-danger h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">安全庫存警示</h6>
+                                <h2 class="display-6 fw-bold">5</h2>
+                            </div>
+                            <i class="fas fa-exclamation-triangle fa-3x opacity-50"></i>
+                        </div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-white bg-success h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">本月預估營收</h6>
+                                <h2 class="display-6 fw-bold">$45,000</h2>
+                            </div>
+                            <i class="fas fa-dollar-sign fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <i class="fas fa-chart-bar me-1"></i> 各倉庫庫存佔比
+                    </div>
+                    <div class="card-body">
+                        <canvas id="inventoryChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!--快速作業-->
+            <div class="col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <i class="fas fa-tools me-1"></i> 快速作業
+                    </div>
+                    <div class="card-body d-grid gap-3 align-content-center">
+                        <button class="btn btn-outline-primary btn-lg text-start shadow-sm">
+                            <i class="fas fa-truck-loading me-2"></i> 建立進貨單 (Inbound)
+                        </button>
+                        <button class="btn btn-outline-success btn-lg text-start shadow-sm">
+                            <i class="fas fa-shopping-cart me-2"></i> 建立新訂單 (Sales Order)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-lg text-start shadow-sm">
+                            <i class="fas fa-search me-2"></i> 庫存查詢 / 盤點
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--近期訂單狀態-->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-list me-1"></i> 近期訂單狀態</span>
+                
+                <a href="order.html" class="btn btn-sm btn-primary">查看全部</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>訂單編號</th>
+                            <th>客戶名稱</th>
+                            <th>日期</th>
+                            <th>員工ID</th>
+                            <th>金額</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SO-2023122501</td> 
+                            <td>d公司</td>         
+                            <td>2025-12-25</td>     
+                            <td>EMP-102</td>
+                            <td>$1,500</td>        
+                            </tr>
+                        <tr>
+                            <td>SO-2023122203</td>
+                            <td>C公司</td>
+                            <td>2025-12-11</td>
+                            <td>EMP-201</td>
+                            <td>$3,200</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <footer class="text-center text-muted py-4 mt-4">
+        <small>&copy; 老師我想過 Warehouse Management System</small>
+    </footer>
+
+    <script>
+        var ctx = document.getElementById('inventoryChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                // 將 labels 替換成從資料庫撈出的倉庫名稱列表
+                labels: ['台北倉', '桃園倉', '高雄倉', '台中倉'], 
+                datasets: [{
+                    label: '目前庫存量 (件)',
+                    //將 data 替換成對應的庫存數量列表
+                    data: [450, 300, 500, 120], 
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

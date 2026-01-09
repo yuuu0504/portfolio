@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>供應商管理 - 物流倉儲管理系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-boxes me-2"></i>物流倉儲管理系統
+            </a>
+            <div class="d-flex flex-row align-items-center ms-auto">
+                <a class="nav-link text-white me-3" href="/product">
+                    <i class="fas fa-box-open me-1"></i>商品
+                </a>
+                <a class="nav-link text-white me-3" href="/warehouse">
+                    <i class="fas fa-warehouse me-1"></i>倉庫
+                </a>
+                <a class="nav-link text-white me-3 active fw-bold" href="/supplier">
+                    <i class="fas fa-truck me-1"></i>供應商
+                </a>
+                <a class="nav-link text-white me-3"  href="/staff">
+                    <i class="fas fa-users me-1"></i>員工管理
+                </a>
+                <span class="text-secondary mx-2">|</span>
+                <a class="nav-link text-warning me-3" href="/inbound">
+                    <i class="fas fa-file-import me-1"></i>進貨單
+                </a>
+                <a class="nav-link text-success me-3" href="/requisitions">
+                    <i class="fas fa-file-invoice-dollar me-1"></i>領料單
+                </a>
+                <span class="text-secondary mx-2">|</span>
+                <span class="text-white ms-2 me-3">
+                    <i class="fas fa-user-circle me-1"></i> Admin
+                </span>
+                <a href="/logout" class="btn btn-outline-light btn-sm">登出</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-truck me-2"></i>供應商管理</h2>
+            <a href="/supplier/add" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i> 新增供應商
+            </a>
+        </div>
+
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                <input type="text" id="searchInput" class="form-control" placeholder="輸入關鍵字搜尋 (例如：供應商名稱、電話、地址...)">
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-striped table-hover mb-0 align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 10%">ID</th>
+                            <th style="width: 25%">供應商名稱</th>
+                            <th style="width: 20%">電話</th>
+                            <th style="width: 30%">地址</th>
+                            <th class="text-end pe-4">操作</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody id="myTable">
+                        {% for s in suppliers %}
+                        <tr>
+                            <td>{{ s.SupplierID }}</td>
+                            <td class="fw-bold text-primary">{{ s.suName }}</td>
+                            <td>{{ s.suPhone }}</td>
+                            <td>{{ s.suAddress }}</td>
+                            <td class="text-end pe-3">
+                                <form action="/supplier/delete/{{ s.SupplierID }}" method="POST" class="d-inline" onsubmit="return confirm('確定要刪除 {{ s.suName }} 嗎？');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr class="no-data">
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="fas fa-truck fa-3x mb-3 opacity-50"></i>
+                                <p>目前沒有供應商資料</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById("searchInput").addEventListener("keyup", function() {
+            var value = this.value.toLowerCase();
+            var rows = document.querySelectorAll("#myTable tr");
+
+            rows.forEach(function(row) {
+                // 忽略沒有資料的那一行
+                if (row.classList.contains('no-data')) return;
+
+                var text = row.innerText.toLowerCase();
+                
+                if (text.indexOf(value) > -1) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
